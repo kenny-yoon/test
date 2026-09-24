@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DualShock Calibration GUI</title>
+<title>Công cụ Hiệu chỉnh DualShock (DualShock Calibration GUI)</title>
 
 <link id="bootstrap-css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -20,6 +20,10 @@
       integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT"
       crossorigin="anonymous">
 
+<!-- Thêm font Inter hiện đại -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -42,13 +46,52 @@
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/finetune.css">
 
+<style>
+  /* Tùy chỉnh nâng cấp giao diện tinh tế & đẹp mắt */
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.01em;
+  }
+  .navbar {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  .card {
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .nav-tabs .nav-link {
+    border-radius: 8px 8px 0 0;
+    font-weight: 500;
+    padding: 10px 20px;
+  }
+  .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+  pre {
+    font-family: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+</style>
+
 </head>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <nav class="navbar bg-body-tertiary navbar-expand-md bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand ds-i18n" href="https://dualshock-tools.github.io">DualShock Calibration GUI</a>
+      <a class="navbar-brand ds-i18n fw-bold" href="https://dualshock-tools.github.io">Giao diện Hiệu chỉnh DualShock</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -57,11 +100,11 @@
 
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link ds-i18n" href="#" onclick="show_faq_modal();">Frequently Asked Questions</a>
+            <a class="nav-link ds-i18n" href="#" onclick="show_faq_modal();">Thắc mắc thường gặp (FAQ)</a>
           </li>
           <li class="nav-item dropdown" id="navbarNavAltMarkup">
             <a class="nav-link dropdown-toggle" id="langMenuButton" role="button" href="#" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-              <svg class="bi text-secondary" width="1.5em" height="1.5em" ><use xlink:href="#lang"/></svg>&nbsp;<span id="curLang">English</span>
+              <svg class="bi text-secondary" width="1.5em" height="1.5em" ><use xlink:href="#lang"/></svg>&nbsp;<span id="curLang">Tiếng Việt</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langMenuButton"  id="availLangs" style="max-height:70vh; overflow-y:auto;">
             </ul>
@@ -82,30 +125,30 @@
 
   <div class="container p-2">
 
-    <!-- Unsupported Browser Warning -->
+    <!-- Cảnh báo trình duyệt không hỗ trợ -->
     <div id="missinghid" style="bottom: 80px; left: 0; right: 0; z-index: 1030; padding: 12px 20px; display: none;">
       <div class="container">
         <div style="border: 2px solid var(--bs-link-color); border-radius: 8px; color: var(--bs-link-color); padding: 12px; background-color: var(--bs-body-bg);">
           <p class="mb-1">
             <i class="fas fa-hand"></i>&nbsp;&nbsp;
-            <span class="ds-i18n">Unsupported browser.</span>
+            <span class="ds-i18n">Trình duyệt không được hỗ trợ.</span>
           </p>
           <p class="mb-1">
-            <span class="ds-i18n">Please use a web browser with WebHID support (e.g. Google Chrome or Microsoft Edge) on a PC or Mac.</span>
-            <span class="ds-i18n">Firefox is supported with the WebHID extension installed.</span>
+            <span class="ds-i18n">Vui lòng sử dụng trình duyệt web có hỗ trợ WebHID (như Google Chrome hoặc Microsoft Edge) trên máy tính PC hoặc Mac.</span>
+            <span class="ds-i18n">Firefox cũng được hỗ trợ nếu đã cài đặt tiện ích mở rộng WebHID.</span>
           </p>
           <p class="mb-0">
-            <span class="ds-i18n">Using this utility on a phone or tablet is not supported.</span>
+            <span class="ds-i18n">Công cụ này không hỗ trợ sử dụng trên điện thoại hoặc máy tính bảng.</span>
           </p>
         </div>
       </div>
     </div>
 
     <div id="offlinebar" class="vstack p-2" style="display: none;">
-      <p class="ds-i18n">Please connect a DualShock 4, a DualSense, DualSense Edge or VR2 controller to your computer and press Connect.</p>
+      <p class="ds-i18n text-center">Vui lòng kết nối tay cầm DualShock 4, DualSense, DualSense Edge hoặc VR2 với máy tính và nhấn Kết nối.</p>
       <button id="btnconnect" type="button" class="btn btn-outline-primary" onclick="connect()">
         <span class="spinner-border spinner-border-sm" style="display: none;" id="connectspinner" aria-hidden="true"></span>
-        <span class="ds-i18n">Connect</span>
+        <span class="ds-i18n">Kết nối</span>
       </button>
       <br>
     </div>
@@ -113,35 +156,35 @@
     <div id="onlinebar" class="vstack p-2" style="display: none;">
       <div class="row">
         <div class="col-sm-9 hstack">
-          <p><b class="ds-i18n">Connected to:</b></p>&nbsp;<p id="devname"></p>
+          <p><b class="ds-i18n">Đã kết nối với:</b></p>&nbsp;<p id="devname"></p>
         </div>
         <div class="col-sm-3">
           <p id="d-bat" style="text-align: right;"></p>
         </div>
       </div>
-      <button type="button" class="btn btn-outline-secondary ds-i18n" onclick="disconnect()">Disconnect</button><br>
+      <button type="button" class="btn btn-outline-secondary ds-i18n" onclick="disconnect()">Ngắt kết nối</button><br>
     </div>
 
     <div id="mainmenu" class="container" style="display: none;">
       <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="controller-tab" data-bs-toggle="tab" data-bs-target="#controller-content" type="button" role="tab" aria-controls="controller-content" aria-selected="true">
-            <i class="fas fa-gamepad"></i>&nbsp;&nbsp;<span class="ds-i18n">Calibration</span>
+            <i class="fas fa-gamepad"></i>&nbsp;&nbsp;<span class="ds-i18n">Hiệu chỉnh</span>
           </button>
         </li>
         <!-- <li class="nav-item" role="presentation">
           <button class="nav-link" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests-content" type="button" role="tab" aria-controls="tests-content" aria-selected="false">
-            <i class="fas fa-vial"></i>&nbsp;&nbsp;<span class="ds-i18n">Tests</span>
+            <i class="fas fa-vial"></i>&nbsp;&nbsp;<span class="ds-i18n">Kiểm tra</span>
           </button>
         </li> -->
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-content" type="button" role="tab" aria-controls="info-content" aria-selected="false">
-            <i class="fas fa-info-circle"></i>&nbsp;&nbsp;<span class="ds-i18n">Info</span>
+            <i class="fas fa-info-circle"></i>&nbsp;&nbsp;<span class="ds-i18n">Thông tin</span>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="debug-tab" data-bs-toggle="tab" data-bs-target="#debug-content" type="button" role="tab" aria-controls="debug-content" aria-selected="false">
-            <i class="fas fa-bug"></i>&nbsp;&nbsp;<span class="ds-i18n">Debug</span>
+            <i class="fas fa-bug"></i>&nbsp;&nbsp;<span class="ds-i18n">Gỡ lỗi (Debug)</span>
           </button>
         </li>
       </ul>
@@ -152,11 +195,11 @@
           <div class="row">
             <div class="col-md-6 col-sm-12">
               <div class="card">
-                <div class="card-header"><i class="fas fa-gamepad"></i>&nbsp;&nbsp;<span class="ds-i18n">Controller Info</span></div>
+                <div class="card-header fw-semibold"><i class="fas fa-gamepad"></i>&nbsp;&nbsp;<span class="ds-i18n">Thông tin tay cầm</span></div>
                 <div class="card-body">
                   <dl class="row px-3 py-2" id="fwinfo"></dl>
                   <span id="infoshowall" class="pb-4 px-4 row">
-                    <button class="btn btn-outline-secondary" onclick="show_info_tab()"><i class="fas fa-plus me-1"></i> <span class="ds-i18n">Show all</span></button>
+                    <button class="btn btn-outline-secondary" onclick="show_info_tab()"><i class="fas fa-plus me-1"></i> <span class="ds-i18n">Hiện tất cả</span></button>
                   </span>
                   </div>
               </div>
@@ -165,7 +208,7 @@
               <div class="d-flex justify-content-end" id="quick-tests-div">
                 <button type="button" class="btn btn-outline-primary ds-btn mb-3" onclick="show_quick_test_modal()" id="quick-test-btn">
                   <i class="fas fa-vial" id="quick-test-icon"></i>&nbsp;&nbsp;
-                  <span id="quick-test-text" class="ds-i18n">Quick Test</span>
+                  <span id="quick-test-text" class="ds-i18n">Kiểm tra nhanh</span>
                 </button>
               </div>
 
@@ -178,52 +221,52 @@
             <div class="col-md-6 col-sm-12" style="min-width: 330px;">
               <div class="vstack gap-2 p-2">
                 <button type="button" class="btn btn-primary ds-btn" onclick="calibrate_stick_centers()" id="four-step-center-calib" style="display: none;">
-                  <span class="ds-i18n">Calibrate stick center</span>
+                  <span class="ds-i18n">Hiệu chỉnh tâm Cần xoay (Stick Center)</span>
                 </button>
                 <div class="btn-group w-100" role="group" style="display: none;" id="quick-center-calib-group">
                   <button type="button" class="btn btn-primary ds-btn flex-grow-1" onclick="executeSelectedCenterCalibration()" id="quick-center-calib">
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <span class="ds-i18n">Calibrate stick center</span>
+                    <span class="ds-i18n">Hiệu chỉnh tâm Cần xoay</span>
                   </button>
                   <button type="button" class="btn btn-primary ds-btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="flex: 0 0 35px;">
-                    <span class="visually-hidden">Toggle dropdown</span>
+                    <span class="visually-hidden">Bật/tắt menu thả xuống</span>
                   </button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" onclick="setCenterCalibrationMethod('quick', event)">
-                      <i class="fas fa-check me-2" id="check-quick" style="display: none;"></i><span class="ds-i18n">Use quick calibration</span>
+                      <i class="fas fa-check me-2" id="check-quick" style="display: none;"></i><span class="ds-i18n">Dùng hiệu chỉnh nhanh</span>
                     </a></li>
                     <li><a class="dropdown-item" href="#" onclick="setCenterCalibrationMethod('four-step', event)">
-                      <i class="fas fa-check me-2" id="check-four-step"></i><span class="ds-i18n">Use four-step calibration</span>
+                      <i class="fas fa-check me-2" id="check-four-step"></i><span class="ds-i18n">Dùng hiệu chỉnh 4 bước</span>
                     </a></li>
                   </ul>
                 </div>
                 <div class="btn-group w-100" role="group" id="range-calib-group">
                   <button type="button" class="btn btn-primary ds-btn flex-grow-1" onclick="executeSelectedRangeCalibration()" id="range-calib">
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <span class="ds-i18n">Calibrate stick range</span>
+                    <span class="ds-i18n">Hiệu chỉnh phạm vi Cần xoay (Range)</span>
                   </button>
                   <button type="button" class="btn btn-primary ds-btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="flex: 0 0 35px;">
-                    <span class="visually-hidden">Toggle dropdown</span>
+                    <span class="visually-hidden">Bật/tắt menu thả xuống</span>
                   </button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" onclick="setRangeCalibrationMethod('normal', event)">
-                      <i class="fas fa-check me-2" id="check-range-normal"></i><span class="ds-i18n">Use normal mode</span>
+                      <i class="fas fa-check me-2" id="check-range-normal"></i><span class="ds-i18n">Chế độ thường</span>
                     </a></li>
                     <li><a class="dropdown-item" href="#" onclick="setRangeCalibrationMethod('expert', event)">
-                      <i class="fas fa-check me-2" id="check-range-expert" style="display: none;"></i><span class="ds-i18n">Use expert mode</span>
+                      <i class="fas fa-check me-2" id="check-range-expert" style="display: none;"></i><span class="ds-i18n">Chế độ nâng cao (Expert)</span>
                     </a></li>
                   </ul>
                 </div>
                 <button type="button" class="btn btn-primary ds-btn" onclick="ds5_finetune()" id="ds5finetune">
-                  <span class="ds-i18n">Finetune stick calibration</span>
+                  <span class="ds-i18n">Tinh chỉnh chi tiết Cần xoay</span>
                 </button>
                 <hr>
-                <button id="savechanges" type="button" class="btn btn-success ds-btn ds-i18n" onclick="flash_all_changes()">Save changes permanently</button>
-                <button id="restore-calibration-btn" type="button" class="btn btn-secondary ds-btn ds-i18n" onclick="openCalibrationHistoryModal()">Restore calibration</button>
-                <button type="button" class="btn btn-danger ds-btn ds-i18n" onclick="reboot_controller()" id="resetBtn">Reboot controller</button>
+                <button id="savechanges" type="button" class="btn btn-success ds-btn ds-i18n" onclick="flash_all_changes()">Lưu thay đổi vĩnh viễn</button>
+                <button id="restore-calibration-btn" type="button" class="btn btn-secondary ds-btn ds-i18n" onclick="openCalibrationHistoryModal()">Khôi phục cấu hình gốc</button>
+                <button type="button" class="btn btn-danger ds-btn ds-i18n" onclick="reboot_controller()" id="resetBtn">Khởi động lại tay cầm</button>
 
                 <div class="card" >
-                  <div class="card-header"><i class="fas fa-crosshairs"></i>&nbsp;&nbsp;<span class="ds-i18n">Joystick Info</span></div>
+                  <div class="card-header fw-semibold"><i class="fas fa-crosshairs"></i>&nbsp;&nbsp;<span class="ds-i18n">Thông số Cần xoay (Joystick)</span></div>
                   <div class="vstack px-2">
                     <center>
                       <div style="position: relative; display: inline-block;">
@@ -263,15 +306,15 @@
 
                   <div class="px-2">
                     <center>
-                      <div class="btn-group mb-3" role="group" aria-label="Display mode options">
+                      <div class="btn-group mb-3" role="group" aria-label="Tùy chọn chế độ hiển thị">
                         <input type="radio" class="btn-check" name="displayMode" id="normalMode" value="normal" checked>
-                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="normalMode">Normal</label>
+                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="normalMode">Chế độ Thường</label>
 
                         <input type="radio" class="btn-check" name="displayMode" id="centerZoomMode" value="centerZoom">
-                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="centerZoomMode">10x zoom</label>
+                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="centerZoomMode">Phóng đại 10x</label>
 
                         <input type="radio" class="btn-check" name="displayMode" id="checkCircularityMode" value="checkCircularity">
-                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="checkCircularityMode">Check circularity</label>
+                        <label class="btn btn-outline-secondary btn-sm ds-i18n" for="checkCircularityMode">Kiểm tra độ tròn</label>
                       </div>
                     </center>
                   </div>
@@ -283,23 +326,23 @@
         <!-- <div class="tab-pane" id="tests-content" role="tabpanel" aria-labelledby="tests-tab">
           <div class="card text-bg-light mt-3" style="min-height: 500px;">
             <div class="card-header">
-              <i class="fas fa-vial"></i>&nbsp;&nbsp;<span class="ds-i18n">Tests</span>
+              <i class="fas fa-vial"></i>&nbsp;&nbsp;<span class="ds-i18n">Kiểm tra</span>
             </div>
             <div class="card-body">
               <div class="row">
                 <div class="col-4">
                   <div class="list-group" id="tests-list" role="tablist">
-                    <a class="list-group-item list-group-item-action active ds-i18n" id="haptic-test-tab" data-bs-toggle="list" href="#haptic-test-pane">Haptic Motors</a>
+                    <a class="list-group-item list-group-item-action active ds-i18n" id="haptic-test-tab" data-bs-toggle="list" href="#haptic-test-pane">Mô-tơ Rung (Haptic)</a>
                   </div>
                 </div>
                 <div class="col-8">
                   <div class="bg-white border rounded-3 p-4">
                     <div class="tab-content">
                       <div class="tab-pane show active" id="haptic-test-pane" role="tabpanel" aria-labelledby="haptic-test-tab">
-                        <h5 class="ds-i18n">Test the Haptic Motors</h5>
-                        <p class="ds-i18n">Press L2 to test the strong (left) haptic motor</p>
-                        <p class="ds-i18n">Press R2 to test the weak (right) haptic motor</p>
-                        <p class="ds-i18n">The motor strength will match how hard you press the trigger</p>
+                        <h5 class="ds-i18n">Kiểm tra mô-tơ rung</h5>
+                        <p class="ds-i18n">Nhấn L2 để kiểm tra mô-tơ rung mạnh (bên trái)</p>
+                        <p class="ds-i18n">Nhấn R2 để kiểm tra mô-tơ rung nhẹ (bên phải)</p>
+                        <p class="ds-i18n">Lực rung sẽ tương ứng với lực bạn nhấn nút cò</p>
                       </div>
                     </div>
                   </div>
@@ -313,7 +356,7 @@
             <div class="row">
               <div class="col-lg-12 col-xl-6 py-3">
                 <div class="card">
-                  <h5 class="card-header"><i class="fas fa-code"></i>&nbsp;&nbsp;<span class="ds-i18n">Software</span></h5>
+                  <h5 class="card-header"><i class="fas fa-code"></i>&nbsp;&nbsp;<span class="ds-i18n">Phần mềm</span></h5>
                   <div class="card-body">
                     <dl class="row" id="fwinfoextra-fw"></dl>
                   </div>
@@ -321,7 +364,7 @@
               </div>
               <div class="col-lg-12 col-xl-6 py-3">
                 <div class="card">
-                  <h5 class="card-header"><i class="fas fa-microchip"></i>&nbsp;&nbsp;<span class="ds-i18n">Hardware</span></h5>
+                  <h5 class="card-header"><i class="fas fa-microchip"></i>&nbsp;&nbsp;<span class="ds-i18n">Phần cứng</span></h5>
                   <div class="card-body">
                     <dl class="row" id="fwinfoextra-hw"></dl>
                   </div>
@@ -334,15 +377,15 @@
         <div class="tab-pane" id="debug-content" role="tabpanel" aria-labelledby="debug-tab">
           <div class="container-fluid py-4">
             <div class="row">
-              <p class="ds-i18n">Sections below are not useful, just some debug infos or manual commands</p>
+              <p class="ds-i18n">Mục bên dưới chỉ phục vụ việc gỡ lỗi hoặc gửi lệnh thủ công, không quá cần thiết cho người dùng thông thường.</p>
             </div>
 
             <div class="row">
               <div class="col-md-6 col-sm-12">
                 <div class="card">
-                  <div class="card-header"><i class="fas fa-bug"></i>&nbsp;&nbsp;<span class="ds-i18n">Debug Info</span></div>
+                  <div class="card-header"><i class="fas fa-bug"></i>&nbsp;&nbsp;<span class="ds-i18n">Thông tin Gỡ lỗi</span></div>
                   <div class="vstack p-2">
-                    <div class="hstack"><p class="ds-i18n">NVS Status</p><p class="ms-auto ds-i18n" id="d-nvstatus">Unknown</p></div>
+                    <div class="hstack"><p class="ds-i18n">Trạng thái NVS</p><p class="ms-auto ds-i18n" id="d-nvstatus">Không xác định</p></div>
                   </div>
                 </div>
                 <br>
@@ -350,12 +393,12 @@
 
               <div class="col-md-6 col-sm-12">
                 <div class="card">
-                  <div class="card-header"><i class="fas fa-skull-crossbones"></i>&nbsp;&nbsp;<span class="ds-i18n">Debug buttons</span></div>
+                  <div class="card-header"><i class="fas fa-skull-crossbones"></i>&nbsp;&nbsp;<span class="ds-i18n">Các nút gỡ lỗi</span></div>
                   <div class="vstack gap-2 p-2">
                     <div class="hstack gap-2">
-                      <button type="button" class="btn btn-success ds-btn ds-i18n" onclick="refresh_nvstatus()">Query NVS status</button>
-                      <button type="button" class="btn btn-primary ds-btn ds-i18n" onclick="nvsunlock()">NVS unlock</button>
-                      <button type="button" class="btn btn-primary ds-btn ds-i18n" onclick="nvslock()">NVS lock</button>
+                      <button type="button" class="btn btn-success ds-btn ds-i18n" onclick="refresh_nvstatus()">Truy vấn trạng thái NVS</button>
+                      <button type="button" class="btn btn-primary ds-btn ds-i18n" onclick="nvsunlock()">Mở khóa NVS</button>
+                      <button type="button" class="btn btn-primary ds-btn ds-i18n" onclick="nvslock()">Khóa NVS</button>
                     </div>
                   </div>
                 </div>
@@ -367,7 +410,7 @@
     </div>
   </div>
 
-  <!-- Alert Messages Container -->
+  <!-- Container hiển thị các thông báo (Alert Messages Container) -->
   <div class="container-fluid fixed-bottom " style="z-index: 1040; pointer-events: none; bottom: 70px;">
     <div class="container">
       <div id="alert-container" class="mb-3" style="pointer-events: auto;">
@@ -376,40 +419,40 @@
     </div>
   </div>
 
-  <!-- About drift and this utility -->
+  <!-- Giới thiệu về tình trạng trôi cần (Drift) và công cụ -->
   <div id="aboutdrift" style="position: fixed; bottom: 6em; left: 0; right: 0; z-index: 0; display: none;">
     <div class="container">
       <div class="mb-4" style="border: 2px solid var(--bs-link-color); border-radius: 8px; color: var(--bs-link-color); padding: 12px; background-color: var(--bs-body-bg);">
         <p class="mb-2">
           <i class="fas fa-hand-point-up"></i>&nbsp;&nbsp;
-          <span class="ds-i18n">This utility cannot fix stick drift.</span>
+          <span class="ds-i18n">Công cụ này không thể sửa lỗi trôi cần xoay (Stick drift) do hư hỏng phần cứng.</span>
         </p>
         <p class="mb-2">
-          <span class="ds-i18n">Drift is caused by mechanical parts in the joystick being worn out, and they need to be replaced to fix the drift.</span>
-          <span class="ds-i18n">After they have been replaced, this utility can be used to calibrate the controller to work with the new joysticks.</span></p>
+          <span class="ds-i18n">Hiện tượng trôi cần xuất hiện do linh kiện cơ khí bên trong bị mòn, bạn cần thay mới linh kiện để khắc phục triệt để.</span>
+          <span class="ds-i18n">Sau khi đã thay thế linh kiện, công cụ này sẽ giúp bạn hiệu chỉnh lại tay cầm để hoạt động chính xác với cần xoay mới.</span></p>
         <p class="mb-0">
           <i class="fas fa-regular fa-triangle-exclamation"></i>&nbsp;&nbsp;
-          <span class="ds-i18n">Calibrating without replacing the joysticks may help temporarily, but it may also make the problem worse, with no way to undo it.</span>
+          <span class="ds-i18n">Cố gắng hiệu chỉnh khi chưa thay linh kiện hỏng có thể tạm thời khắc phục, nhưng cũng có thể khiến tình trạng nặng hơn và không thể khôi phục lại.</span>
         </p>
       </div>
 
       <div id="lastConnected" class="gap-2">
-        <span class="text-muted"><i class="fas fa-history"></i>&nbsp;&nbsp;<span class="ds-i18n">Last connected</span>:</span>
+        <span class="text-muted"><i class="fas fa-history"></i>&nbsp;&nbsp;<span class="ds-i18n">Lần kết nối gần nhất</span>:</span>
         <span id="lastConnectedInfo"></span>
         <div id="lastConnectedWarning" style="display: none;">
           <p class="text-danger" style="margin-top: 8px; margin-bottom: 0;">
-            <i class="fas fa-regular fa-triangle-exclamation"></i>&nbsp;&nbsp;<span class="ds-i18n">This controller has unsaved changes that will be lost when the controller is rebooted.</span>
+            <i class="fas fa-regular fa-triangle-exclamation"></i>&nbsp;&nbsp;<span class="ds-i18n">Tay cầm này có các thay đổi chưa được lưu, dữ liệu sẽ bị mất khi khởi động lại tay cầm.</span>
           </p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Fixed Footer -->
+  <!-- Chân trang cố định (Fixed Footer) -->
   <footer class="fixed-bottom bg-body-tertiary border-top">
     <div class="container">
       <div class="d-flex flex-column flex-sm-row justify-content-between py-3" id="footbody">
-        <p class="mb-0"><a target="_blank" href="https://github.com/dualshock-tools/dualshock-tools.github.io/commits/main/"><span class="ds-i18n">Version</span> 2.34</a> (2026-08-29) - <a href="#" class="ds-i18n" onclick="show_donate_modal();">Support this project</a>&nbsp;<span id="authorMsg"></span></p>
+        <p class="mb-0"><a target="_blank" href="https://github.com/dualshock-tools/dualshock-tools.github.io/commits/main/"><span class="ds-i18n">Phiên bản</span> 2.34</a> (2026-08-29) - <a href="#" class="ds-i18n" onclick="show_donate_modal();">Ủng hộ dự án này</a>&nbsp;<span id="authorMsg"></span></p>
 
         <ul class="list-unstyled d-flex mb-0">
           <li class="ms-3"><a class="text-dark" href="mailto:ds4@the.al" target="_blank"><svg class="bi" width="24" height="24"><use xlink:href="#mail"/></svg></a></li>
@@ -430,7 +473,7 @@
   gtag('js', new Date());
   gtag('config', 'G-FSXPMDXLLS');
 
-  // The gboot() function is now auto-called when the core.js module loads
-  // No manual initialization needed here
+  // Hàm gboot() sẽ tự động chạy khi module core.js được tải
+  // Không cần khởi tạo thủ công ở đây
 </script>
 </html>
